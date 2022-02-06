@@ -21,7 +21,7 @@ class RepresentativeViewModelFactory(val application: Application) : ViewModelPr
 }
 
 
-class RepresentativeViewModel(application: Application): AndroidViewModel(application) {
+class RepresentativeViewModel(application: Application) : AndroidViewModel(application) {
     //Establish live data for representatives and address
     //need to get access too API
     //need to get address using the button
@@ -44,11 +44,11 @@ class RepresentativeViewModel(application: Application): AndroidViewModel(applic
 
     //Create function to fetch representatives from API from a provided address
 
-     fun getReps() {
+    fun getReps() {
         viewModelScope.launch {
             try {
                 _address.value?.let {
-                    val (offices, officials) = CivicsApi.retrofitService.getRepsAPI(it.toString())
+                    val (offices, officials) = CivicsApi.retrofitService.getRepsAPI(it.toFormattedString())
                         .await()
                     _representatives.value =
                         offices.flatMap { office -> office.getVoterInfoAPIs(officials) }
@@ -62,13 +62,14 @@ class RepresentativeViewModel(application: Application): AndroidViewModel(applic
 
         }
     }
+
     // Create function get address from geo location
     fun geoLocationAddress(address: Address) {
-        _address.value=address
+        _address.value = address
     }
 
     //Create function to get address from individual fields
-     fun addressFromFields(address: Address) {
+    fun addressFromFields(address: Address) {
         _address.value = address
     }
 }
